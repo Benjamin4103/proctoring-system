@@ -1,0 +1,25 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+.env
+*.egg-info/
+.pytest_cache/
+
+# Node
+node_modules/
+.next/
+*.log
+npm-debug.log*
+
+# Models
+*.pt
+*.task
+
+# Uploads
+uploads/
+
+# OS
+.DS_Store
+Thumbs.db
