@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 import React, { useEffect, useState } from 'react'
 import api from '@/lib/api'
 
@@ -83,8 +83,8 @@ export default function AdminDashboard() {
         <h1 className="text-2xl font-semibold mb-6 text-gray-800">Admin login</h1>
         {error && <div className="mb-4 p-3 bg-red-50 text-red-600 rounded-lg text-sm">{error}</div>}
         <div className="space-y-4">
-          <input type="email" placeholder="Admin email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 placeholder-gray-400 bg-white"/>
-          <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 placeholder-gray-400 bg-white"/>
+          <input type="email" placeholder="Admin email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+          <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"/>
           <button onClick={login} className="w-full bg-blue-600 text-white py-2 rounded-lg text-sm font-medium hover:bg-blue-700">Sign in</button>
         </div>
       </div>
@@ -127,7 +127,7 @@ export default function AdminDashboard() {
                 <th className="px-5 py-3 text-left">Risk level</th>
                 <th className="px-5 py-3 text-left">Suspicion score</th>
                 <th className="px-5 py-3 text-left">Started</th>
-                <th className="px-5 py-3 text-left">AI Report</th>
+                <th className="px-5 py-3 text-left">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
@@ -142,19 +142,19 @@ export default function AdminDashboard() {
                       <p className="text-gray-400 text-xs">{s.student_email}</p>
                     </td>
                     <td className="px-5 py-4">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${s.status === 'active' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-600'}`}>
+                      <span className={'px-2 py-1 rounded-full text-xs font-medium ' + (s.status === 'active' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-600')}>
                         {s.status}
                       </span>
                     </td>
                     <td className="px-5 py-4">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${riskColor(s.risk_level)}`}>
+                      <span className={'px-2 py-1 rounded-full text-xs font-medium ' + riskColor(s.risk_level)}>
                         {s.risk_level}
                       </span>
                     </td>
                     <td className="px-5 py-4">
                       <div className="flex items-center gap-2">
                         <div className="w-24 bg-gray-100 rounded-full h-1.5">
-                          <div className={`h-1.5 rounded-full ${s.suspicion_score > 70 ? 'bg-red-500' : s.suspicion_score > 45 ? 'bg-orange-400' : s.suspicion_score > 20 ? 'bg-yellow-400' : 'bg-green-400'}`}
+                          <div className={'h-1.5 rounded-full ' + (s.suspicion_score > 70 ? 'bg-red-500' : s.suspicion_score > 45 ? 'bg-orange-400' : s.suspicion_score > 20 ? 'bg-yellow-400' : 'bg-green-400')}
                             style={{ width: `${Math.min(s.suspicion_score, 100)}%` }}/>
                         </div>
                         <span className="text-gray-600">{s.suspicion_score.toFixed(1)}</span>
@@ -164,13 +164,18 @@ export default function AdminDashboard() {
                       {s.started_at ? new Date(s.started_at).toLocaleTimeString() : '-'}
                     </td>
                     <td className="px-5 py-4">
-                      <button
-                        onClick={() => generateReport(s.id)}
-                        disabled={loadingReport === s.id}
-                        className="px-3 py-1 bg-blue-600 text-white text-xs rounded-lg hover:bg-blue-700 disabled:opacity-50"
-                      >
-                        {loadingReport === s.id ? 'Generating...' : 'Generate'}
-                      </button>
+                      <div className="flex gap-2">
+                        <a href={'/admin/sessions/' + s.id} className="px-3 py-1 bg-gray-100 text-gray-700 text-xs rounded-lg hover:bg-gray-200">
+                          Timeline
+                        </a>
+                        <button
+                          onClick={() => generateReport(s.id)}
+                          disabled={loadingReport === s.id}
+                          className="px-3 py-1 bg-blue-600 text-white text-xs rounded-lg hover:bg-blue-700 disabled:opacity-50"
+                        >
+                          {loadingReport === s.id ? 'Generating...' : 'AI Report'}
+                        </button>
+                      </div>
                     </td>
                   </tr>
                   {reports[s.id] && (
